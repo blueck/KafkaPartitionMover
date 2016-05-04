@@ -11,7 +11,7 @@ then
   echo "When running this script, please make sure the broker is stopped!"
   echo "-sd|--source-directory         Source directory for partition move"
   echo "-dd|--destination-directory    Destination directory for partition move"
-  echo "-p|--partitions                Space seperated list of partitions to move"
+  echo "-p|--partitions                Space separated list of partitions to move"
   echo "Example: ./PartMove.sh -sd /vol1/kafka -dd /vol2/kafka --partitions topic1-1 topic2-1 topic3-2"
 exit 0
 fi
