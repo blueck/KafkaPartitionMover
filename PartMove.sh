@@ -69,12 +69,13 @@ do
   for checkFile in recovery-point-offset-checkpoint replication-offset-checkpoint
   do
     # making backups
-    cp -p $srcDir/$checkFile /tmp/$checkFile.orig.$( dirname $srcDir | sed "s/\//-/g" ).$RANDOM
-    cp -p $destDir/$checkFile /tmp/$checkFile.orig.$( dirname $destDir | sed "s/\//-/g" ).$RANDOM
+    cp -p $srcDir/$checkFile /tmp/$checkFile.orig.$( echo $srcDir | sed "s/\//_/g" ).$RANDOM
+    cp -p $destDir/$checkFile /tmp/$checkFile.orig.$( echo $destDir | sed "s/\//_/g" ).$RANDOM
     for i in $parts
     do
       chkPntName=$( echo $i | sed 's/\(.*\)-/\1 /' )
       pCntSrcOrig=$[ $( wc -l < $srcDir/$checkFile ) -2 ]
+      pCntDestOrig=$[ $( wc -l < $destDir/$checkFile ) -2 ]   
       grep "$chkPntName" $srcDir/$checkFile >> $destDir/$checkFile 
       if (( $? > 0 ))
       then 
@@ -84,7 +85,7 @@ do
       pCntSrcNew=$[ $( wc -l < $srcDir/$checkFile ) -3 ]
       sed -e "2s/$pCntSrcOrig/$pCntSrcNew/" -e "/$chkPntName/d" -i.bak $srcDir/$checkFile || exit 1
       mv $srcDir/$checkFile.bak /tmp/$checkFile.bak.src
-      pCntDestOrig=$[ $( wc -l < $destDir/$checkFile ) -2 ]   
+      pCntDestNew=$[ $( wc -l < $destDir/$checkFile ) -2 ]   
       sed -e "2s/$pCntDestOrig/$pCntDestNew/" -i.bak $destDir/$checkFile || exit 1
       mv $destDir/$checkFile.bak /tmp/$checkFile.bak.dest
     done
