@@ -1,6 +1,6 @@
 # Kafka Partition Mover
 
-Bash script to aid in manually moving paritions folders between Kafka log.dirs already defined in your server.properties.  This helps if you need to move a busy parition from a full volume to a less full volume.  
+Bash script to aid in manually moving paritions folders between Kafka log.dirs already defined in your server.properties.  This helps if you need to move a busy parition from a full volume to a less full volume on your broker.  
 
 server.properties
 ```sh
