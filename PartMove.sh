@@ -67,10 +67,30 @@ do
   cp -p $destDir/$checkFile /tmp/$checkFile.orig.$( echo $destDir | sed "s/\//_/g" ).$setRand
 done
 
+# Setting the ctrl-c trap
+trap ctrl-c-copystep INT
+
+function ctrl-c-copystep {
+  echo "Ctrl-C caught, will attempt to recover from changes..."
+  echo "Restoring original checkpoint files"
+  for checkFile in $checkPointFiles
+  do
+    cp -p /tmp/$checkFile.orig.$( echo $srcDir | sed "s/\//_/g" ).$setRand $srcDir/$checkFile
+    cp -p /tmp/$checkFile.orig.$( echo $destDir | sed "s/\//_/g" ).$setRand $destDir/$checkFile
+  done
+  echo "Removing copied directories if they exist"
+  for i in $parts
+  do
+    echo "Removing $srcDir/$i"
+    rm -rf $destDir/$i/
+  done
+  exit
+}
+
 # Moving partitions
 for i in $parts
 do
-  echo "Copying srcDir/$i"
+  echo "Copying $srcDir/$i"
   cp -pR $srcDir/$i $destDir/ || exit 1
   echo "Updating checkpoint files"
   
@@ -96,3 +116,19 @@ do
   echo "Removing $srcDir/$i"
   rm -rf $srcDir/$i
 done
+
+# Reassigning trap to prevent data loss
+trap ctrl-c-rmstep INT
+
+function ctrl-c-rmstep {
+  echo "Script was removing your source directories.  Manual cleanup will be required."
+  exit 0
+}
+
+# Removing source directories
+for i in $parts
+do
+  echo "Removing $srcDir/$i"
+  rm -rf $srcDir/$i
+done
+echo "Finished with partition migration from $srcDir to $destDir"
