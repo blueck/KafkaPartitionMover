@@ -113,8 +113,6 @@ do
     sed -e "2s/$pCntDestOrig/$pCntDestNew/" -i.bak $destDir/$checkFile || exit 1
     mv $destDir/$checkFile.bak /tmp/$checkFile.bak.dest
   done
-  echo "Removing $srcDir/$i"
-  rm -rf $srcDir/$i
 done
 
 # Reassigning trap to prevent data loss
