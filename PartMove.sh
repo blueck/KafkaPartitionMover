@@ -81,7 +81,7 @@ function ctrl-c-copystep {
   echo "Removing copied directories if they exist"
   for i in $parts
   do
-    echo "Removing $srcDir/$i"
+    echo "Removing $destDir/$i"
     rm -rf $destDir/$i/
   done
   exit
